@@ -7,44 +7,46 @@ The `pg_dump` utility cannot take a password parameter. You will need to set up 
 (This .pgpass file is only used to match the password with other details like hostname, username, and database name used below)
 
 '''
-from auth import post_request
+from auth import post_request, get_request
+import time
+import requests
+import urllib.parse
 
 database_id = "db-1a2b3c4d5e6f"
-suspend_endpoint = f"/databases/{database_id}/suspend"
-restart_endpoint = f"/databases/{database_id}/restart"
+database_id = 'dpg-cqaq8mt6l47c73cl96s0-a'
+backup_endpoint = f"/postgres/{database_id}/backup"
 
-# Suspend the database
-suspend_response = post_request(suspend_endpoint)
-if not suspend_response:
-    print("Failed to suspend the database.")
+# get the current date/time without seconds in UTC
+backup_timestamp = time.strftime("%Y-%m-%dT%H:%M:00Z", time.gmtime())
+print(backup_timestamp)
+
+# start a backup
+success, payload = post_request(backup_endpoint, data='')
+if not success:
+    print("Failed to back up the database.")
     exit(1)
 
-# Run pg_dump in the background
-import subprocess
+wait_time = 30
+backup_url = ''
+done = False
+while not done:
+    # fetch the backup endpoint until we see our backup_timestamp in the createdAt field in the results
+    success, payload = get_request(backup_endpoint)
+    print(payload)
+    if success:
+        for backup in payload:
+            if backup["createdAt"] == backup_timestamp:
+                backup_url = backup["url"]
+                done = True
+                break
+            else:
+                print(f'{backup["createdAt"]} != {backup_timestamp}')
+    time.sleep(wait_time)
 
-DB_USERNAME = os.getenv("DB_USERNAME")
-DB_HOSTNAME = os.getenv("DB_HOSTNAME")
-DB_DATABASE = os.getenv("DB_DATABASE")
-
-try:
-    subprocess.run([
-        "pg_dump", 
-        "-U", DB_USERNAME, 
-        "-h", DB_HOSTNAME,
-        DB_DATABASE
-    ], check=True, stdout=open("backup.sql", "w"))
-
-    print("Database backup created successfully.")
-except subprocess.CalledProcessError as e:
-    print(f"Failed to create database backup: {e}")
-finally:
-    # handle any other cleanup here that you might need
-    pass
-
-# Resume the database
-restart_response = post_request(restart_endpoint)
-if restart_response:
-    print("Database restarted successfully:")
-    print(restart_response)
-else:
-    print("Failed to restart the database.")
+# fetch the backup URL
+filename = urllib.parse.urlparse(backup_url).path.split("/")[-1]
+r = requests.get(backup_url)
+if r.status_code == 200:
+    with open(filename, "wb") as f:
+        f.write(r.content)
+    print("Backup created successfully.")
