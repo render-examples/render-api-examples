@@ -6,7 +6,7 @@ This repo contains small examples of code to solve common use cases with Render'
 
 ## Full API Documentation
 
-The full API documentation can be found at [https://render.com/docs/api](https://render.com/docs/api)
+The full API documentation can be found at https://api-docs.render.com/reference/introduction
 
 
 ## Contributing
