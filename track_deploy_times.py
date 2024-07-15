@@ -6,6 +6,8 @@ To accomplish this, their script would need to do the following:
 - call the deploy endpoint for each service to get the deploy times
 - calculate the latest deploy time for each service
 
+IMPORTANT NOTE: the 'deploys' endpoint sorts by ID value, which may or may not be the most recent based on ID value generation.
+As such, we recommend fetching several deployments and checking for a 'maximum' date value to find the most recent.
 '''
 
 from auth import get_request
