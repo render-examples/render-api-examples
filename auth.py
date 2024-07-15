@@ -25,8 +25,11 @@ def get_request(endpoint, params=None):
 
 def post_request(endpoint, data):
     response = requests.post(base_url + endpoint, headers=headers, json=data)
-    if response.status_code in [200, 201]:
-        return True, response.json()
+    if response.status_code in [200, 201, 202]:
+        if response.text:
+            return True, response.json()
+        else:
+            return True, None
     else:
         print(f"Failed to post data to {endpoint} with status code: {response.status_code}")
         print(response.text)
