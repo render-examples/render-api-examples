@@ -1,21 +1,27 @@
+# Demonstrates authenticating with the Render API
+# using a bearer token. Other examples in this repo
+# import this module to authenticate with the Render API.
 import os
 import requests
 
-# We recommend setting your API token as an environment variable for better security
-api_token = os.getenv("RENDER_API_TOKEN")
+# For security, set your API key as an environment variable
+# instead of hardcoding it.
+API_KEY = os.getenv("RENDER_API_KEY")
 
-# render's API base URL
-base_url = "https://api.render.com/v1"
+# The Render API's base URL
+API_BASE_URL = "https://api.render.com/v1"
 
-# set a dictionary/map for any headers to send, which mush include the Authorization header with your bearer token and setting the content type to be JSON
+# Define a dictionary of headers to include in every
+# request. Must include an Authorization header with your
+# bearer token and setting the content type to JSON
 headers = {
-    "Authorization": f"Bearer {api_token}",
+    "Authorization": f"Bearer {API_KEY}",
     "Content-Type": "application/json"
 }
 
-# methods to do GET/POST requests to the Render API, we'll use these in other examples below
+# Methods for sending GET/POST requests to the Render API
 def get_request(endpoint, params=None):
-    response = requests.get(base_url + endpoint, headers=headers, params=params)
+    response = requests.get(API_BASE_URL + endpoint, headers=headers, params=params)
     if response.status_code == 200:
         return True, response.json()
     else:
@@ -24,7 +30,7 @@ def get_request(endpoint, params=None):
         return False, None
 
 def post_request(endpoint, data):
-    response = requests.post(base_url + endpoint, headers=headers, json=data)
+    response = requests.post(API_BASE_URL + endpoint, headers=headers, json=data)
     if response.status_code in [200, 201, 202]:
         if response.text:
             return True, response.json()
