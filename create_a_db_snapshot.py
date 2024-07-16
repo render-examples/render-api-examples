@@ -21,7 +21,7 @@ backup_timestamp = time.strftime("%Y-%m-%dT%H:%M:00Z", time.gmtime())
 print(backup_timestamp)
 
 # start a backup
-success, payload = post_request(backup_endpoint, data='')
+success, payload = post_request(backup_endpoint)
 if not success:
     print("Failed to back up the database.")
     exit(1)

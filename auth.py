@@ -29,7 +29,7 @@ def get_request(endpoint, params=None):
         print(response.text)
         return False, None
 
-def post_request(endpoint, data):
+def post_request(endpoint, data={}):
     response = requests.post(API_BASE_URL + endpoint, headers=headers, json=data)
     if response.status_code in [200, 201, 202]:
         if response.text:
