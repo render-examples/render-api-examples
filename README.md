@@ -1,13 +1,8 @@
 # Render API Examples
 
-Render is a cloud platform that lets developers easily, flexibly deploy and scale web apps. Built for developers who love shipping products, not managing infra.
+This repo contains example usage for the [Render API](https://docs.render.com/api). Currently, all examples use Python and the `requests` library, but the concepts apply to any language and HTTP client.
 
-This repo contains small examples of code to solve common use cases with Render's API.
-
-## Full API Documentation
-
-The full API documentation can be found at https://api-docs.render.com/reference/introduction
-
+See also the complete [Render API reference](https://api-docs.render.com/reference/introduction).
 
 ## Contributing
 
