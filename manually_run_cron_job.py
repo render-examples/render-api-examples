@@ -1,18 +1,16 @@
 '''
-Render cron jobs are scheduled to start at a specific time, but what if you want to start a cron job manually?
+Demonstrates using the Render API to start a cron job
+outside of its defined schedule.
 
-This example shows you how to start a cron job manually using the Render API.
-
-Note that Render only allows one copy of a cron job to run, to avoid problems with parallel execution. You can use the `force` parameter to force start the cron job, which will stop the currently running job and start a new one.
-
-Any cron jobs that are terminated will be sent a SIGTERM signal, and will have about 30 seconds to shut down before being forcibly terminated.
-
+If you attempt to start a cron job while another run is
+active, Render terminates the active run before starting
+the new one.
 '''
 from auth import post_request
 
-cron_job_id = "cron-1a2b3c4d5e6f"
-start_cron_job_endpoint = f"/cronjobs/{cron_job_id}/runs"
+# Replace with your cron job's ID
+CRON_JOB_ID = "cron-1a2b3c4d5e6f"
 
-# you could add some conditional checking here to know whether to start the cron job or not
+START_CRON_JOB_ENDPOINT_PATH = f"/cronjobs/{CRON_JOB_ID}/runs"
 
-response = post_request(start_cron_job_endpoint)
+response = post_request(START_CRON_JOB_ENDPOINT_PATH)

@@ -3,7 +3,8 @@ Demonstrates using the Render API to scale a Render
 background worker service up or down based on the current
 size of a Redis job queue.
 
-Render also provides built-in support for autoscaling, but only based on a service's CPU and/or memory usage.
+Render also provides built-in support for autoscaling,
+based on a service's CPU and/or memory usage.
 '''
 from auth import get_request, post_request
 import redis
@@ -14,10 +15,10 @@ import redis
 SERVICE_ID = "svc-a1b2c3d4e5f6"
 
 # Replace with your Redis instance's ID
-redis_id = "rds-1a2b3c4d5e6f"
+REDIS_ID = "rds-1a2b3c4d5e6f"
 
 SCALE_ENDPOINT_PATH = f"/services/{SERVICE_ID}/scale"
-REDIS_INFO_ENDPOINT_PATH = f"/redis/{redis_id}/connection-info"
+REDIS_INFO_ENDPOINT_PATH = f"/redis/{REDIS_ID}/connection-info"
 
 success, redis_connection_info = get_request(REDIS_INFO_ENDPOINT_PATH)
 if not success:
