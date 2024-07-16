@@ -1,31 +1,35 @@
 '''
-Demonstrates using the Render API to start a create a database
-snapshot and download it.
+Demonstrates using the Render API to create a database
+backup and download it.
 '''
 from auth import post_request, get_request
 import time
 import requests
 import urllib.parse
 
-database_id = "db-1a2b3c4d5e6f"
-backup_endpoint = f"/postgres/{database_id}/backup"
+# Replace with your database's ID
+DATABASE_ID = "db-1a2b3c4d5e6f"
 
-# get the current date/time without seconds in UTC
+BACKUP_ENDPOINT_PATH = f"/postgres/{DATABASE_ID}/backup"
+
+# Get the current date/time without seconds in UTC
 backup_timestamp = time.strftime("%Y-%m-%dT%H:%M:00Z", time.gmtime())
 print(backup_timestamp)
 
-# start a backup
-success, payload = post_request(backup_endpoint)
+# Start a backup
+success, payload = post_request(BACKUP_ENDPOINT_PATH)
 if not success:
-    print("Failed to back up the database.")
+    print("Failed to initiate database backup.")
     exit(1)
 
-wait_time = 30
+WAIT_TIME_SECONDS = 30
 backup_url = ''
 done = False
+
+# Every 30 seconds, fetch recent backups until we
+# observe a backup captured after backup_timestamp
 while not done:
-    # fetch the backup endpoint until we see our backup_timestamp in the createdAt field in the results
-    success, payload = get_request(backup_endpoint)
+    success, payload = get_request(BACKUP_ENDPOINT_PATH)
     print(payload)
     if success:
         for backup in payload:
@@ -34,10 +38,10 @@ while not done:
                 done = True
                 break
             else:
-                print(f'{backup["createdAt"]} != {backup_timestamp}')
-    time.sleep(wait_time)
+                print(f'{backup["createdAt"]} precedes {backup_timestamp}')
+    time.sleep(WAIT_TIME_SECONDS)
 
-# fetch the backup URL
+# Fetch the backup from its URL
 filename = urllib.parse.urlparse(backup_url).path.split("/")[-1]
 r = requests.get(backup_url)
 if r.status_code == 200:
