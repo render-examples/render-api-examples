@@ -8,4 +8,4 @@ See also the complete [Render API reference](https://api-docs.render.com/referen
 
 We welcome community contributions to this repo. Feel free to open a PR with your own Render API integration in any programming language.
 
-Take care not to include any actual service IDs or API keys in your code! Instead, use environment variables or placeholders in your code and include instructions for others to provide their own values.
+Take care not to include any actual service IDs or API keys in your code! Instead, use environment variables or placeholder strings as appropriate, and include instructions for others to provide their own values.
